@@ -3,32 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\OrderRepository;
+use App\Repository\ShoppingSessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
-#[ORM\Table(name: '`order`')]
+#[ORM\Entity(repositoryClass: ShoppingSessionRepository::class)]
 #[ApiResource]
-class Order
+class ShoppingSession
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private $reference;
-
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    private $userId;
-
     #[ORM\Column(type: 'integer')]
     private $total;
-
-    #[ORM\Column(type: 'string', length: 100)]
-    private $status;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
@@ -39,41 +29,21 @@ class Order
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $deactivatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'orderId', targetEntity: OrderItem::class, orphanRemoval: true)]
-    private $orderItems;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'shoppingSessions')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $userId;
+
+    #[ORM\OneToMany(mappedBy: 'shoppingSessionId', targetEntity: CartItem::class, orphanRemoval: true)]
+    private $cartItems;
 
     public function __construct()
     {
-        $this->orderItems = new ArrayCollection();
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getReference(): ?string
-    {
-        return $this->reference;
-    }
-
-    public function setReference(string $reference): self
-    {
-        $this->reference = $reference;
-
-        return $this;
-    }
-
-    public function getUserId(): ?User
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(?User $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
     }
 
     public function getTotal(): ?int
@@ -84,18 +54,6 @@ class Order
     public function setTotal(int $total): self
     {
         $this->total = $total;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -136,30 +94,42 @@ class Order
         return $this;
     }
 
-    /**
-     * @return Collection<int, OrderItem>
-     */
-    public function getOrderItems(): Collection
+    public function getUserId(): ?User
     {
-        return $this->orderItems;
+        return $this->userId;
     }
 
-    public function addOrderItem(OrderItem $orderItem): self
+    public function setUserId(?User $userId): self
     {
-        if (!$this->orderItems->contains($orderItem)) {
-            $this->orderItems[] = $orderItem;
-            $orderItem->setOrderId($this);
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CartItem>
+     */
+    public function getCartItems(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addCartItem(CartItem $cartItem): self
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setShoppingSessionId($this);
         }
 
         return $this;
     }
 
-    public function removeOrderItem(OrderItem $orderItem): self
+    public function removeCartItem(CartItem $cartItem): self
     {
-        if ($this->orderItems->removeElement($orderItem)) {
+        if ($this->cartItems->removeElement($cartItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getOrderId() === $this) {
-                $orderItem->setOrderId(null);
+            if ($cartItem->getShoppingSessionId() === $this) {
+                $cartItem->setShoppingSessionId(null);
             }
         }
 
