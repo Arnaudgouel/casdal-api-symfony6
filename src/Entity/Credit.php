@@ -34,7 +34,7 @@ class Credit
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'credits')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
     private $userId;
 
     public function getId(): ?int

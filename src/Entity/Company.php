@@ -33,8 +33,8 @@ class Company
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: CompanyCategory::class, inversedBy: 'companies')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $categoryId;
+    #[ORM\JoinColumn(name: 'company_category_id', nullable: false)]
+    private $companyCategoryId;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
@@ -117,14 +117,14 @@ class Company
         return $this;
     }
 
-    public function getCategoryId(): ?CompanyCategory
+    public function getCompanyCategoryId(): ?CompanyCategory
     {
-        return $this->categoryId;
+        return $this->companyCategoryId;
     }
 
-    public function setCategoryId(?CompanyCategory $categoryId): self
+    public function setCompanyCategoryId(?CompanyCategory $companyCategoryId): self
     {
-        $this->categoryId = $categoryId;
+        $this->companyCategoryId = $companyCategoryId;
 
         return $this;
     }

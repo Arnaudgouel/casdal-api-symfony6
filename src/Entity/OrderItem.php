@@ -28,11 +28,11 @@ class OrderItem
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'order_id', nullable: false)]
     private $orderId;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'orderItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'product_id', nullable: false)]
     private $productId;
 
     public function getId(): ?int

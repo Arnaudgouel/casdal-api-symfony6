@@ -43,7 +43,7 @@ class CompanyAddress
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'companyAddresses')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'company_id', nullable: false)]
     private $companyId;
 
     public function getId(): ?int

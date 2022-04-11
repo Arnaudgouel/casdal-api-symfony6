@@ -28,11 +28,11 @@ class CartItem
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'product_id', nullable: false)]
     private $productId;
 
     #[ORM\ManyToOne(targetEntity: ShoppingSession::class, inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'shopping_session_id', nullable: false)]
     private $shoppingSessionId;
 
     public function getId(): ?int

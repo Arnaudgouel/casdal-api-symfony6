@@ -42,11 +42,11 @@ class Product
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: ProductCategory::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'product_category_id', nullable: false)]
     private $productCategoryId;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'company_id', nullable: false)]
     private $companyId;
 
     #[ORM\OneToMany(mappedBy: 'productId', targetEntity: OrderItem::class)]

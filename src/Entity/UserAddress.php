@@ -46,7 +46,7 @@ class UserAddress
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAddresses')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
     private $userId;
 
     #[ORM\Column(type: 'datetime_immutable')]

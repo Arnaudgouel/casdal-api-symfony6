@@ -30,7 +30,7 @@ class ShoppingSession
     private $deactivatedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'shoppingSessions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
     private $userId;
 
     #[ORM\OneToMany(mappedBy: 'shoppingSessionId', targetEntity: CartItem::class, orphanRemoval: true)]
