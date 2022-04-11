@@ -22,6 +22,7 @@ class Order
     private $reference;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: true)]
     private $userId;
 
     #[ORM\Column(type: 'integer')]
