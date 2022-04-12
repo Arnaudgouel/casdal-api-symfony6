@@ -60,8 +60,9 @@ class CompanyRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    */
 
-    
+
     /**
      * @return Company[] Returns an array of Company objects
      */

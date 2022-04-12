@@ -22,8 +22,5 @@ class CompanyController extends AbstractController
     {
         $companies = $this->em->getRepository(Company::class)->findAllActive();
         return $this->json($companies);
-        return $this->render('company/index.html.twig', [
-            'controller_name' => 'CompanyController',
-        ]);
     }
 }
