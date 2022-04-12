@@ -60,7 +60,40 @@ class CompanyRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+
+    
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllActiveQB()
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.deactivatedAt IS NULL')
+            ->orderBy('c.companyCategoryId', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllActive()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT c.*, cc.title as "category" FROM company c
+            JOIN company_category cc ON cc.id = c.company_category_id
+            JOIN "user" u ON u.id = c.owner_id
+            WHERE c.deactivated_at IS NULL
+            AND c.owner_id IS NOT NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
 
     /*
     public function findOneBySomeField($value): ?Company

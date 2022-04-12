@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyCategoryRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class CompanyCategory
 {
     #[ORM\Id]
@@ -32,7 +32,7 @@ class CompanyCategory
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $deactivatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'categoryId', targetEntity: Company::class)]
+    #[ORM\OneToMany(mappedBy: 'companyCategoryId', targetEntity: Company::class)]
     private $companies;
 
     public function __construct()
@@ -117,7 +117,7 @@ class CompanyCategory
     {
         if (!$this->companies->contains($company)) {
             $this->companies[] = $company;
-            $company->setCategoryId($this);
+            $company->setCompanyCategoryId($this);
         }
 
         return $this;
@@ -127,8 +127,8 @@ class CompanyCategory
     {
         if ($this->companies->removeElement($company)) {
             // set the owning side to null (unless already changed)
-            if ($company->getCategoryId() === $this) {
-                $company->setCategoryId(null);
+            if ($company->getCompanyCategoryId() === $this) {
+                $company->setCompanyCategoryId(null);
             }
         }
 
