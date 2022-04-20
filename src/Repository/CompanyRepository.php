@@ -86,12 +86,75 @@ class CompanyRepository extends ServiceEntityRepository
         $sql = '
             SELECT c.*, cc.title as "category" FROM company c
             JOIN company_category cc ON cc.id = c.company_category_id
-            JOIN "user" u ON u.id = c.owner_id
             WHERE c.deactivated_at IS NULL
             AND c.owner_id IS NOT NULL
         ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllActiveInCategory($cat)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT c.*, cc.title as "category" FROM company c
+            JOIN company_category cc ON cc.id = c.company_category_id
+            WHERE c.deactivated_at IS NULL
+            AND c.company_category_id = :cat
+            AND c.owner_id IS NOT NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'cat' => $cat
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllActiveWithSearch($search)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT c.*, cc.title as "category" FROM company c
+            JOIN company_category cc ON cc.id = c.company_category_id
+            JOIN "user" u ON u.id = c.owner_id
+            WHERE c.deactivated_at IS NULL
+            AND UPPER(c.name) LIKE UPPER(:search)
+            AND c.owner_id IS NOT NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'search' => '%' . $search . '%'
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
+    public function findAllActiveCompaniesManagedByUser($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT c.*, cc.title as "category" FROM company c
+            JOIN company_category cc ON cc.id = c.company_category_id
+            JOIN "user" u ON u.id = c.owner_id
+            WHERE c.deactivated_at IS NULL
+            AND c.owner_id = :userId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
+        ]);
         return $resultSet->fetchAllAssociative();
     }
 
