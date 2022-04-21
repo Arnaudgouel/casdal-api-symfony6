@@ -45,6 +45,27 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+
+    public function findAllActiveProductsInCompanyOrderByCategory($companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT p.*, pc.name as "category_name" FROM product p
+            JOIN product_category pc ON pc.id = p.product_category_id
+            WHERE p.deactivated_at IS NULL
+            AND p.company_id = :companyId
+            ORDER BY p.product_category_id ASC
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

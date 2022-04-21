@@ -33,7 +33,7 @@ class CompanyController extends AbstractController
         return $this->json($companies, 200, ['Content-Type' => 'application/json']);
     }
 
-    #[Route('/companies/category/{id}', methods: ["GET"], name: 'app_company_category')]
+    #[Route('/companies/category', methods: ["GET"], name: 'app_company_category')]
     public function allInOneCategory(Request $request): Response
     {
         $categoryId = intval($request->query->get("category_id"));
@@ -51,7 +51,7 @@ class CompanyController extends AbstractController
         return $this->json($companies);
     }
 
-    #[Route('/companies/owned/{id}', methods: ["GET"], name: 'app_company_owned_by_user')]
+    #[Route('/companies/user/{id}', methods: ["GET"], name: 'app_company_owned_by_user')]
     public function allCompaniesManagedByUser(int $id, Request $request): Response
     {
         $request->query->get("page");

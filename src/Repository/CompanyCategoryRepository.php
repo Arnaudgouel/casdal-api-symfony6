@@ -45,6 +45,22 @@ class CompanyCategoryRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return CompanyCategory[] Returns an array of CompanyCategory objects
+     */
+
+    public function findAllActive()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT cc.* FROM company_category cc
+            WHERE cc.deactivated_at IS NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return CompanyCategory[] Returns an array of CompanyCategory objects
     //  */
