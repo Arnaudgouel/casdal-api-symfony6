@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Product;
+use App\Service\ApiResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,28 +36,42 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/companies/category', methods: ["GET"], name: 'app_company_category')]
-    public function allInOneCategory(Request $request): Response
+    public function allInOneCategory(Request $request, ApiResponse $apiResponse): Response
     {
-        $categoryId = intval($request->query->get("category_id"));
-        try {
-            if ($categoryId != $request->query->get("category_id")) {
-                throw new Exception("Only digits are accepted for category_id parameter");
-            }
-            $companies = $this->em->getRepository(Company::class)->findAllActiveInCategory($categoryId);
-            if (empty($companies)) {
-                throw new Exception("No companies found in this category");
-            }
-        } catch (Exception $e) {
-            return $this->json($e->getMessage());
+        $params = [
+            "category_id" => "integer"
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isParamsExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
         }
+        $categoryId = $response["category_id"];
+        $companies = $this->em->getRepository(Company::class)->findAllActiveInCategory($categoryId);
         return $this->json($companies);
     }
 
     #[Route('/companies/user/{id}', methods: ["GET"], name: 'app_company_owned_by_user')]
-    public function allCompaniesManagedByUser(int $id, Request $request): Response
+    public function allCompaniesManagedByUser(int $id): Response
     {
-        $request->query->get("page");
         $companies = $this->em->getRepository(Company::class)->findAllActiveCompaniesManagedByUser($id);
         return $this->json($companies);
+    }
+
+    #[Route('/companies/products', methods: ["GET"], name: 'app_company_products')]
+    public function findCompanyProducts(Request $request, ApiResponse $apiResponse): Response
+    {
+        $params = [
+            "company_id" => "integer"
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isParamsExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+        $companyId = $response["company_id"];
+        $products = $this->em->getRepository(Product::class)->findAllActiveProductsInCompanyOrderByCategory($companyId);
+
+        return $this->json($products, 200, ['Content-Type' => 'application/json']);
     }
 }
