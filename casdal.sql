@@ -274,19 +274,23 @@ INSERT INTO
 values
   ('Salade', 'Salade d''algues', 1, 300, true, 3),
   ('M13', '10 sushis saumon', 2, 1500, true, 3),
-  (
-    'Tempura crevette',
-    '4 Beignet frit de crevette',
-    1,
-    600,
-    true,
-    3
-  ),
-  (
-    'Tacos medium',
-    '400g, 2 viandes',
-    4,
-    300,
-    true,
-    4
-  );
+  ('Tempura crevette', '4 Beignet frit de crevette', 1, 600, true, 3),
+  ('Tacos medium', '400g, 2 viandes', 4, 300, true, 4);
+INSERT INTO
+  "order" (reference, user_id, total)
+values
+  ('10000001', 3, 0),
+  ('10000002', 4, 0),
+  ('10000003', 3, 10),
+  ('10000004', 4, 100),
+  ('10000005', 3, 50);
+INSERT INTO
+  order_item (
+    order_id,
+    product_id,
+    quantity
+  )
+values
+  (4, 1, 1),
+  (4, 3, 1),
+  (4, 2, 4);

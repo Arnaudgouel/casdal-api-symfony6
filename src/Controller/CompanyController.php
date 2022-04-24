@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Service\ApiResponse;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,6 +72,23 @@ class CompanyController extends AbstractController
         }
         $companyId = $response["company_id"];
         $products = $this->em->getRepository(Product::class)->findAllActiveProductsInCompanyOrderByCategory($companyId);
+
+        return $this->json($products, 200, ['Content-Type' => 'application/json']);
+    }
+
+    #[Route('/companies/orders', methods: ["GET"], name: 'app_orders_company')]
+    public function findOrdersCompany(Request $request, ApiResponse $apiResponse): Response
+    {
+        $params = [
+            "company_id" => "integer"
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isParamsExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+        $companyId = $response["company_id"];
+        $products = $this->em->getRepository(Order::class)->findOrdersByCompany($companyId);
 
         return $this->json($products, 200, ['Content-Type' => 'application/json']);
     }

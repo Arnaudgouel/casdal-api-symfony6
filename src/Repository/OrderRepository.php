@@ -45,6 +45,28 @@ class OrderRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
+    public function findOrdersByCompany($companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT Distinct(o.*), oi. FROM "order" o
+            JOIN order_item oi ON oi.order_id = o.id
+            JOIN product p ON p.id = oi.product_id
+            JOIN company c ON c.id = p.company_id
+            WHERE o.deactivated_at IS NULL
+            AND p.company_id = :companyId
+            AND c.owner_id IS NOT NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Order[] Returns an array of Order objects
     //  */
