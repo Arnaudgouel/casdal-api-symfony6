@@ -294,3 +294,34 @@ values
   (4, 1, 1),
   (4, 3, 1),
   (4, 2, 4);
+
+INSERT INTO
+  user_address (user_id, name, address_line1, address_line2, city, postal_code, country, phone_number)
+values
+  (3, 'Chez moi', '18 rue du doyen', NULL, 'Lyon', '69003', 'France', '0658785042'),
+  (3, 'Chez mes parents', '21 rue du doyen', NULL, 'Lyon', '69003', 'France', '0658785042'),
+  (4, 'Chez moi', '12 avenue henry barbousse', NULL, 'Lyon', '69003', 'France', '0685785042'),
+  (3, 'Chez ma copine', '55 rue Leo', NULL, 'Villeurbanne', '69100', 'France', '0658745042');
+INSERT INTO
+  shopping_session (user_id, total)
+values
+  (3, 5500),
+  (4, 3650),
+  (2, 4780);
+
+INSERT INTO
+  cart_item (shopping_session_id, product_id, quantity)
+values
+  (1, 1, 3),
+  (1, 2, 2),
+  (1, 3, 3),
+  (2, 4, 1);
+
+INSERT INTO
+  company_address (company_id, name, address_line1, address_line2, city, postal_code, country)
+VALUES
+  (1, 'Lyon 7', '28 rue Pascal', NULL, 'Lyon', '69007', 'France'),
+  (1, 'Lyon 3', '57 rue Jules Vernes', NULL, 'Lyon', '69003', 'France'),
+  (2, 'Lyon', '78 cours Albert Thomas', NULL, 'Lyon', '69003', 'France'),
+  (3, 'Lyon 8', '43 rue Marcel Merieux', NULL, 'Lyon', '69008', 'France'),
+  (4, 'Villeurbanne', '28 rue Paul', NULL, 'Villeurbanne', '69100', 'France');
