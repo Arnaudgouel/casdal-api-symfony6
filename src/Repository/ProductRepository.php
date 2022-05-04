@@ -66,6 +66,30 @@ class ProductRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+
+    public function findMostSoldProductsForOneCompany($companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT SUM(oi.quantity) ventes, p.* FROM product p
+            JOIN order_item oi ON oi.product_id = p.id
+            JOIN "order" o ON o.id = oi.order_id
+            WHERE o.deactivated_at IS NULL
+            AND p.company_id = :companyId
+            GROUP BY p.id
+            ORDER BY ventes DESC
+            LIMIT 5
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

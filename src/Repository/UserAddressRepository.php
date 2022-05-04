@@ -62,6 +62,46 @@ class UserAddressRepository extends ServiceEntityRepository
     }
     */
 
+    /**
+     * @return UserAddress[] Returns an array of UserAddress objects
+     */
+    
+    public function findAllByUser($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT ua.* FROM user_address ua
+            WHERE ua.user_id = :userId
+            AND ua.deactivated_at IS NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @return UserAddress Returns an array of UserAddress objects
+     */
+    
+    public function findLastByUser($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT ua.* FROM user_address ua
+            WHERE ua.user_id = :userId
+            AND ua.deactivated_at IS NULL
+            ORDER BY ua.selected_at DESC
+            LIMIT 1
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+
     /*
     public function findOneBySomeField($value): ?UserAddress
     {

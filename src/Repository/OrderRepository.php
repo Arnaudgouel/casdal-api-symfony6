@@ -52,17 +52,38 @@ class OrderRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT Distinct(o.*), oi. FROM "order" o
+            SELECT Distinct(o.*), SUM(oi.quantity) product_count FROM "order" o
             JOIN order_item oi ON oi.order_id = o.id
             JOIN product p ON p.id = oi.product_id
             JOIN company c ON c.id = p.company_id
             WHERE o.deactivated_at IS NULL
             AND p.company_id = :companyId
             AND c.owner_id IS NOT NULL
+            GROUP BY o.id
         ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery([
             'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
+    /**
+     * @return Order[] Returns an array of Order objects
+     */
+    public function findOrdersByUser($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT o.* FROM "order" o
+            JOIN "user" u ON u.id = o.user_id
+            WHERE o.deactivated_at IS NULL
+            AND u.id = :userId
+            ORDER BY o.created_at DESC
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
         ]);
         return $resultSet->fetchAllAssociative();
     }

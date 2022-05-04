@@ -158,7 +158,6 @@ class CompanyRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
-
     /*
     public function findOneBySomeField($value): ?Company
     {

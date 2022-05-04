@@ -62,6 +62,24 @@ class OrderItemRepository extends ServiceEntityRepository
     }
     */
 
+    /**
+     * @return OrderItem[] Returns an array of OrderItem objects
+     */
+    public function findByOrder($orderId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT oi.* FROM order_item oi
+            JOIN "order" o ON o.id = oi.order_id
+            WHERE o.id = :orderId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'orderId' => $orderId
+        ]);
+        return $resultSet->fetchAllAssociative();
+    }
+
     /*
     public function findOneBySomeField($value): ?OrderItem
     {
