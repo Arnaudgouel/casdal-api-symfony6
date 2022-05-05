@@ -62,6 +62,26 @@ class ProductCategoryRepository extends ServiceEntityRepository
     }
     */
 
+     /**
+      * @return ProductCategory[] Returns an array of ProductCategory objects
+      */
+    
+    public function findByCompany($companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT DISTINCT(pc.name) FROM product_category pc
+            RIGHT JOIN product p ON p.product_category_id = pc.id
+            WHERE p.company_id = :companyId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+    
+
     /*
     public function findOneBySomeField($value): ?ProductCategory
     {

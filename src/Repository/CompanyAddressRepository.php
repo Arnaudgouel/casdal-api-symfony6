@@ -62,6 +62,25 @@ class CompanyAddressRepository extends ServiceEntityRepository
     }
     */
 
+     /**
+      * @return CompanyAddress[] Returns an array of CompanyAddress objects
+      */
+    
+    public function findByCompany($companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT ca.* FROM company_address ca
+            WHERE ca.company_id = :companyId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'companyId' => $companyId
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+    
+
     /*
     public function findOneBySomeField($value): ?CompanyAddress
     {

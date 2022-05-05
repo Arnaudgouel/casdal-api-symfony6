@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\CompanyAddress;
 use App\Entity\Order;
 use App\Entity\Product;
+use App\Entity\ProductCategory;
 use App\Service\ApiResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -72,8 +74,16 @@ class CompanyController extends AbstractController
         }
         $companyId = $response["company_id"];
         $products = $this->em->getRepository(Product::class)->findAllActiveProductsInCompanyOrderByCategory($companyId);
+        $productsCategories = $this->em->getRepository(ProductCategory::class)->findByCompany($companyId);
+        $address = $this->em->getRepository(CompanyAddress::class)->findByCompany($companyId);
 
-        return $this->json($products, 200, ['Content-Type' => 'application/json']);
+        $data = [
+            "address" => $address,
+            "productsCategories" => $productsCategories,
+            "products" => $products
+        ];
+
+        return $this->json($data, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/companies/products/best', methods: ["GET"], name: 'app_company_products_top_5')]

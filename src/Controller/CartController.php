@@ -36,21 +36,4 @@ class CartController extends AbstractController
 
         return $this->json($products, 200, ['Content-Type' => 'application/json']);
     }
-
-    #[Route('/cart', methods: ["GET"], name: 'app_cart')]
-    public function findCartUser(Request $request, ApiResponse $apiResponse): Response
-    {
-        $params = [
-            "user_id" => "integer"
-        ];
-        $apiResponse->setParams($params);
-        $response = $apiResponse->isParamsExistAndCorrectType($request);
-        if ($apiResponse->hasError) {
-            return $this->json($response, 400, ['Content-Type' => 'application/json']);
-        }
-        $userId = $response["user_id"];
-        $products = $this->em->getRepository(ShoppingSession::class)->findByOrder($userId);
-
-        return $this->json($products, 200, ['Content-Type' => 'application/json']);
-    }
 }
