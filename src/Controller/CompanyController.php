@@ -25,9 +25,21 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/companies', methods: ["GET"], name: 'app_companies')]
-    public function findCompanies(Request $request): Response
+    public function findCompanies(Request $request, ApiResponse $apiResponse): Response
     {
-        $search = $request->query->get("search");
+        $params = [
+            "search" => [
+                "type" => "string",
+                "required" => false
+            ],
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isParamsExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+
+        $search = $response["search"] ?? false;
 
         if ($search) {
             $companies = $this->em->getRepository(Company::class)->findAllActiveWithSearch($search);
@@ -42,7 +54,9 @@ class CompanyController extends AbstractController
     public function allInOneCategory(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "category_id" => "integer"
+            "category_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);
@@ -65,7 +79,9 @@ class CompanyController extends AbstractController
     public function findCompanyProducts(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "company_id" => "integer"
+            "company_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);
@@ -90,7 +106,9 @@ class CompanyController extends AbstractController
     public function findCompanyBestProducts(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "company_id" => "integer"
+            "company_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);
@@ -107,7 +125,9 @@ class CompanyController extends AbstractController
     public function findOrdersCompany(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "company_id" => "integer"
+            "company_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);

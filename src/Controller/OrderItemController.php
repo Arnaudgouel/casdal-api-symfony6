@@ -23,7 +23,9 @@ class OrderItemController extends AbstractController
     public function findOrdersUser(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "order_id" => "integer"
+            "order_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);

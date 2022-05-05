@@ -102,6 +102,39 @@ class UserAddressRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
+    public function insert($userId, $name, $addressLine1, $addressLine2, $city, $postalCode, $country, $phoneNumber) :bool
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+        INSERT INTO
+            user_address 
+            (user_id, name, address_line1, address_line2, city, postal_code, country, phone_number)
+        VALUES
+            (
+                :userId,
+                :name,
+                :address_line1,
+                :address_line2,
+                :city,
+                :postal_code,
+                :country,
+                :phone_number,
+            ),
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId,
+            'name' => $name,
+            'address_line1' => $addressLine1,
+            'address_line2' => $addressLine2,
+            'city' => $city,
+            'postal_code' => $postalCode,
+            'country' => $country,
+            'phone_number' => $phoneNumber,
+        ]);
+        return $resultSet->rowCount() == 1;
+    }
+
     /*
     public function findOneBySomeField($value): ?UserAddress
     {

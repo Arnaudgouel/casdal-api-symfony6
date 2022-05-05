@@ -24,7 +24,9 @@ class CartController extends AbstractController
     public function findCartItemUser(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "user_id" => "integer"
+            "user_id" => [
+                "type" => "integer"
+            ],
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);
