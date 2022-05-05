@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\CartItem;
-use App\Entity\ShoppingSession;
 use App\Service\ApiResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

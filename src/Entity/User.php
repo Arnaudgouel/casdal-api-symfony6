@@ -57,16 +57,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'userId', targetEntity: Credit::class, orphanRemoval: true)]
     private $credits;
 
-    #[ORM\OneToMany(mappedBy: 'userId', targetEntity: ShoppingSession::class, orphanRemoval: true)]
-    private $shoppingSessions;
-
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->userAddresses = new ArrayCollection();
         $this->companies = new ArrayCollection();
         $this->credits = new ArrayCollection();
-        $this->shoppingSessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -325,36 +321,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($credit->getUserId() === $this) {
                 $credit->setUserId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ShoppingSession>
-     */
-    public function getShoppingSessions(): Collection
-    {
-        return $this->shoppingSessions;
-    }
-
-    public function addShoppingSession(ShoppingSession $shoppingSession): self
-    {
-        if (!$this->shoppingSessions->contains($shoppingSession)) {
-            $this->shoppingSessions[] = $shoppingSession;
-            $shoppingSession->setUserId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeShoppingSession(ShoppingSession $shoppingSession): self
-    {
-        if ($this->shoppingSessions->removeElement($shoppingSession)) {
-            // set the owning side to null (unless already changed)
-            if ($shoppingSession->getUserId() === $this) {
-                $shoppingSession->setUserId(null);
             }
         }
 
