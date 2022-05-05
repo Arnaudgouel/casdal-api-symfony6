@@ -31,9 +31,9 @@ class CartItem
     #[ORM\JoinColumn(name: 'product_id', nullable: false)]
     private $productId;
 
-    #[ORM\ManyToOne(targetEntity: ShoppingSession::class, inversedBy: 'cartItems')]
-    #[ORM\JoinColumn(name: 'shopping_session_id', nullable: false)]
-    private $shoppingSessionId;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', nullable: false)]
+    private $userId;
 
     public function getId(): ?int
     {
@@ -100,14 +100,14 @@ class CartItem
         return $this;
     }
 
-    public function getShoppingSessionId(): ?ShoppingSession
+    public function getuserId(): ?User
     {
-        return $this->shoppingSessionId;
+        return $this->userId;
     }
 
-    public function setShoppingSessionId(?ShoppingSession $shoppingSessionId): self
+    public function setuserId(?User $userId): self
     {
-        $this->shoppingSessionId = $shoppingSessionId;
+        $this->userId = $userId;
 
         return $this;
     }

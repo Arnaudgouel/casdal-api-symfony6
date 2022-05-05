@@ -302,20 +302,14 @@ values
   (3, 'Chez mes parents', '21 rue du doyen', NULL, 'Lyon', '69003', 'France', '0658785042'),
   (4, 'Chez moi', '12 avenue henry barbousse', NULL, 'Lyon', '69003', 'France', '0685785042'),
   (3, 'Chez ma copine', '55 rue Leo', NULL, 'Villeurbanne', '69100', 'France', '0658745042');
-INSERT INTO
-  shopping_session (user_id, total)
-values
-  (3, 5500),
-  (4, 3650),
-  (2, 4780);
 
 INSERT INTO
-  cart_item (shopping_session_id, product_id, quantity)
+  cart_item (user_id, product_id, quantity)
 values
-  (1, 1, 3),
-  (1, 2, 2),
-  (1, 3, 3),
-  (2, 4, 1);
+  (3, 1, 3),
+  (3, 2, 2),
+  (3, 3, 3),
+  (4, 4, 1);
 
 INSERT INTO
   company_address (company_id, name, address_line1, address_line2, city, postal_code, country)
