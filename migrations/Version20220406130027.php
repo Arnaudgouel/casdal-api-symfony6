@@ -70,7 +70,6 @@ final class Version20220406130027 extends AbstractMigration
         $this->addSql('DROP TABLE company_address CASCADE');
         $this->addSql('DROP TABLE company_category CASCADE');
         $this->addSql('DROP TABLE cart_item CASCADE');
-        $this->addSql('DROP TABLE shopping_session CASCADE');
         $this->addSql('DROP TABLE user_address CASCADE');
         $this->addSql('DROP TABLE credit CASCADE');
     }
