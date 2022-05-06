@@ -181,7 +181,9 @@ class UserAddressController extends AbstractController
     public function getLastAdresses(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
-            "user_id" => "integer"
+            "user_id" => [
+                "type" => "integer",
+            ]
         ];
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);

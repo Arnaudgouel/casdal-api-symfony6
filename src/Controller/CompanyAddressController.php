@@ -35,8 +35,8 @@ class CompanyAddressController extends AbstractController
             return $this->json($response, 400, ['Content-Type' => 'application/json']);
         }
         $companyId = $response["company_id"];
-        $companyAddress = $this->em->getRepository(CompanyAddress::class)->findBy(["company_id" => $companyId]);
-        return $this->json($companyAddress);
+        $companyAddress = $this->em->getRepository(CompanyAddress::class)->findBy(["companyId" => $companyId]);
+        return $this->json($companyAddress, 200);
     }
 
     #[Route('/companies/addresses', methods: "POST")]
