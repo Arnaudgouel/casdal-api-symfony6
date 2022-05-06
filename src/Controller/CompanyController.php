@@ -4,10 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\CompanyAddress;
+use App\Entity\CompanyCategory;
 use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\ProductCategory;
+use App\Entity\User;
 use App\Service\ApiResponse;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -138,5 +141,113 @@ class CompanyController extends AbstractController
         $products = $this->em->getRepository(Order::class)->findOrdersByCompany($companyId);
 
         return $this->json($products, 200, ['Content-Type' => 'application/json']);
+    } 
+    
+    #[Route('/companies', methods: ["POST"])]
+    public function addCompany(Request $request, ApiResponse $apiResponse): Response
+    {
+        $params = [
+            "name" => [
+                "type" => "string",
+            ],
+            "image" => [
+                "type" => "string",
+            ],
+            "company_category_id" => [
+                "type" => "integer",
+            ],
+            "owner_id" => [
+                "type" => "integer",
+            ],
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isBodyExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+        $company = new Company();
+
+        $name = $response["name"];
+        $company->setName($name);
+
+        $image = $response["image"];
+        $company->setImage($image);
+
+        $companyCategoryId = $response["company_category_id"];
+        $companyCategory = $this->em->getRepository(CompanyCategory::class)->find($companyCategoryId);
+        $company->setCompanyCategoryId($companyCategory);
+
+        $ownerId = $response["owner_id"];
+        $owner = $this->em->getRepository(User::class)->find($ownerId);
+        $company->setOwner($owner);
+
+        $company->setCreatedAt(new DateTimeImmutable());
+        $company->setUpdatedAt(new DateTimeImmutable());
+
+        $this->em->persist($company);
+        $this->em->flush();
+        return $this->json(true);
+    }
+
+    #[Route('/companies/{id}', methods: ["POST"])]
+    public function updateCompany(int $id, Request $request, ApiResponse $apiResponse): Response
+    {
+        $company = $this->em->getRepository(Company::class)->find($id);
+
+        if (empty($company)) {
+            return $this->json("Doesn't exist", 404);
+        }
+        
+        $params = [
+            "name" => [
+                "type" => "string",
+                "required" => false
+            ],
+            "image" => [
+                "type" => "string",
+                "required" => false
+            ],
+            "company_category_id" => [
+                "type" => "integer",
+                "required" => false
+            ],
+            "owner_id" => [
+                "type" => "integer",
+                "required" => false
+            ],
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isBodyExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+
+        $name = $response["name"] ?? null;
+        if ($name) {
+            $company->setName($name);
+        }
+
+        $image = $response["image"] ?? null;
+        if ($image) {
+            $company->setImage($image);
+        }
+
+        $companyCategoryId = $response["company_category_id"] ?? null;
+        if ($companyCategoryId) {
+            $companyCategory = $this->em->getRepository(CompanyCategory::class)->find($companyCategoryId);
+            $company->setCompanyCategoryId($companyCategory);
+        } 
+
+        $ownerId = $response["owner_id"] ?? null;
+        if ($ownerId) {
+            $owner = $this->em->getRepository(User::class)->find($ownerId);
+            $company->setOwner($owner);
+        } 
+
+        $company->setUpdatedAt(New DateTimeImmutable());
+
+        $this->em->persist($companyCategory);
+        $this->em->flush();
+        return $this->json(true);
     }
 }

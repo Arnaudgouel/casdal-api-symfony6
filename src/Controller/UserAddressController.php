@@ -92,6 +92,10 @@ class UserAddressController extends AbstractController
         $userAddress->setPostalCode($response["postal_code"]);
         $userAddress->setCountry($response["country"]);
         $userAddress->setPhoneNumber($response["phone_number"]);
+
+        $userAddress->setCreatedAt(new DateTimeImmutable());
+        $userAddress->setUpdatedAt(new DateTimeImmutable());
+
         $this->em->persist($userAddress);
         $this->em->flush();
         return $this->json(true);
@@ -100,6 +104,12 @@ class UserAddressController extends AbstractController
     #[Route('/users/addresses/{id}', methods: "POST")]
     public function updateAdresses(int $id, Request $request, ApiResponse $apiResponse): Response
     {
+        $userAddress = $this->em->getRepository(UserAddress::class)->find($id);
+
+        if (empty($userAddress)) {
+            return $this->json("Doesn't exist", 404);
+        }
+
         $params = [
             "name" => [
                 "type" => "string",
@@ -136,7 +146,6 @@ class UserAddressController extends AbstractController
             return $this->json($response, 400, ['Content-Type' => 'application/json']);
         }
         
-        $userAddress = $this->em->getRepository(UserAddress::class)->find($id);
 
         $name = $response["name"] ?? null;
         if ($name) $userAddress->setName($name);
