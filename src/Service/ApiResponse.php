@@ -95,7 +95,7 @@ class ApiResponse
             break;
         }
 
-        if (!$this->paramsRequest[$key] || !$goodType || $differentAfterConversion) {
+        if (is_null($this->paramsRequest[$key]) || !$goodType || $differentAfterConversion) {
           $this->response["errors"]["code"] = 400;
           $this->response["errors"]["type"] = "params_invalid";
           $this->response["errors"]["message"][] = $options["required"] ? "${key} is required and must be type of " . $options['type'] : "${key} must be type of " . $options['type'];

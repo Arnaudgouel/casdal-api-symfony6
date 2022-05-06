@@ -79,6 +79,26 @@ class CartItemRepository extends ServiceEntityRepository
         return $resultSet->fetchAllAssociative();
     }
 
+    /**
+     * @return CartItem[] Returns an array of CartItem objects
+     */
+    public function findItemsOfOtherCompanies($userId, $companyId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT ci.* FROM cart_item ci
+            JOIN product p ON p.id = ci.product_id
+            WHERE ci.user_id = :userId
+            AND p.company_id != :companyId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId,
+            'companyId' => $companyId,
+        ]);
+        return $resultSet->rowCount() == 0;
+    }
+
     /*
     public function findOneBySomeField($value): ?CartItem
     {

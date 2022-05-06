@@ -86,10 +86,6 @@ class ProductController extends AbstractController
             return $this->json("Doesn't exist", 404);
         }
 
-        if (!$product) {
-            return $this->json("No product found", 404);
-        }
-
         $params = [
             "name" => [
                 "type" => "string",
