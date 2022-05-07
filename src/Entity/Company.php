@@ -40,9 +40,6 @@ class Company
     #[ORM\JoinColumn(nullable: false)]
     private $owner;
 
-    #[ORM\OneToMany(mappedBy: 'companyId', targetEntity: CompanyAddress::class, orphanRemoval: true)]
-    private $companyAddresses;
-
     #[ORM\OneToMany(mappedBy: 'companyId', targetEntity: Product::class, orphanRemoval: true)]
     private $products;
 
@@ -137,36 +134,6 @@ class Company
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, CompanyAddress>
-     */
-    public function getCompanyAddresses(): Collection
-    {
-        return $this->companyAddresses;
-    }
-
-    public function addCompanyAddress(CompanyAddress $companyAddress): self
-    {
-        if (!$this->companyAddresses->contains($companyAddress)) {
-            $this->companyAddresses[] = $companyAddress;
-            $companyAddress->setCompanyId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompanyAddress(CompanyAddress $companyAddress): self
-    {
-        if ($this->companyAddresses->removeElement($companyAddress)) {
-            // set the owning side to null (unless already changed)
-            if ($companyAddress->getCompanyId() === $this) {
-                $companyAddress->setCompanyId(null);
-            }
-        }
 
         return $this;
     }

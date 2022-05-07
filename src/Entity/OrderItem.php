@@ -7,7 +7,7 @@ use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class OrderItem
 {
     #[ORM\Id]

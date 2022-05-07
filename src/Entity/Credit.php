@@ -7,7 +7,7 @@ use App\Repository\CreditRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CreditRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class Credit
 {
     #[ORM\Id]

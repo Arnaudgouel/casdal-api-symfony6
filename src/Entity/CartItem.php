@@ -7,7 +7,7 @@ use App\Repository\CartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class CartItem
 {
     #[ORM\Id]

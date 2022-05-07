@@ -7,7 +7,7 @@ use App\Repository\CompanyAddressRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyAddressRepository::class)]
-#[ApiResource]
+// #[ApiResource]
 class CompanyAddress
 {
     #[ORM\Id]
@@ -42,7 +42,7 @@ class CompanyAddress
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $deactivatedAt;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'companyAddresses')]
+    #[ORM\OneToOne(targetEntity: Company::class, inversedBy: 'companyAddresses')]
     #[ORM\JoinColumn(name: 'company_id', nullable: false)]
     private $companyId;
 
