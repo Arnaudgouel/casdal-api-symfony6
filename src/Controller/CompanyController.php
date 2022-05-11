@@ -39,7 +39,11 @@ class CompanyController extends AbstractController
         $apiResponse->setParams($params);
         $response = $apiResponse->isParamsExistAndCorrectType($request);
         if ($apiResponse->hasError) {
-            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+            return $this->json($response, 400, [
+                'Content-Type' => 'application/json',
+                "Access-Control-Allow-Origin" => "*",
+                "Access-Control-Allow-Methods" => "GET, POST, OPTIONS, PUT, DELETE"
+            ]);
         }
 
         $search = $response["search"] ?? false;
@@ -50,7 +54,11 @@ class CompanyController extends AbstractController
             $companies = $this->em->getRepository(Company::class)->findAllActive();
         }
 
-        return $this->json($companies, 200, ['Content-Type' => 'application/json']);
+        return $this->json($companies, 200, [
+            'Content-Type' => 'application/json',
+            "Access-Control-Allow-Origin" => "*",
+            "Access-Control-Allow-Methods" => "GET, POST, OPTIONS, PUT, DELETE"
+        ]);
     }
 
     #[Route('/companies/category', methods: ["GET"], name: 'app_company_category')]
