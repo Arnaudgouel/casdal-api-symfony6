@@ -98,6 +98,27 @@ class CompanyRepository extends ServiceEntityRepository
      * @return Company[] Returns an array of Company objects
      */
 
+    public function findOneActive($id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT c.*, cc.title as "category" FROM company c
+            JOIN company_category cc ON cc.id = c.company_category_id
+            WHERE c.deactivated_at IS NULL
+            AND c.owner_id IS NOT NULL
+            AND c.id = :id
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'id' => $id
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+
+    /**
+     * @return Company[] Returns an array of Company objects
+     */
+
     public function findAllActiveInCategory($cat)
     {
         $conn = $this->getEntityManager()->getConnection();

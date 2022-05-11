@@ -55,9 +55,7 @@ class CompanyController extends AbstractController
         }
 
         return $this->json($companies, 200, [
-            'Content-Type' => 'application/json',
-            "Access-Control-Allow-Origin" => "*",
-            "Access-Control-Allow-Methods" => "GET, POST, OPTIONS, PUT, DELETE"
+            'Content-Type' => 'application/json'
         ]);
     }
 
@@ -100,11 +98,13 @@ class CompanyController extends AbstractController
             return $this->json($response, 400, ['Content-Type' => 'application/json']);
         }
         $companyId = $response["company_id"];
+        $company = $this->em->getRepository(Company::class)->findOneActive($companyId);
         $products = $this->em->getRepository(Product::class)->findAllActiveProductsInCompanyOrderByCategory($companyId);
         $productsCategories = $this->em->getRepository(ProductCategory::class)->findByCompany($companyId);
         $address = $this->em->getRepository(CompanyAddress::class)->findByCompany($companyId);
 
         $data = [
+            "company" => $company,
             "address" => $address,
             "productsCategories" => $productsCategories,
             "products" => $products
