@@ -78,7 +78,7 @@ class ProductCategoryRepository extends ServiceEntityRepository
         $resultSet = $stmt->executeQuery([
             'companyId' => $companyId
         ]);
-        return $resultSet->fetchAssociative();
+        return $resultSet->fetchAllAssociative();
     }
     
 
