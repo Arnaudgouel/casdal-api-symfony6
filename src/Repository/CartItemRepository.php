@@ -69,7 +69,8 @@ class CartItemRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT ci.* FROM cart_item ci
+            SELECT ci.*, p.* FROM cart_item ci
+            JOIN product p ON p.id = ci.product_id
             WHERE ci.user_id = :userId
         ';
         $stmt = $conn->prepare($sql);
@@ -77,6 +78,39 @@ class CartItemRepository extends ServiceEntityRepository
             'userId' => $userId
         ]);
         return $resultSet->fetchAllAssociative();
+    }
+
+    public function findTotalCart($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT SUM(p.price * ci.quantity) price, SUM(ci.quantity) quantity FROM cart_item ci
+            JOIN product p ON p.id = ci.product_id
+            WHERE ci.user_id = :userId
+            GROUP BY ci.user_id
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+
+    public function findOneCartItem($productId, $userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT ci.* FROM cart_item ci
+            JOIN product p ON p.id = ci.product_id
+            WHERE ci.user_id = :userId
+            AND p.id = :productId
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'productId' => $productId,
+            'userId' => $userId
+        ]);
+        return $resultSet->fetchAssociative();
     }
 
     /**

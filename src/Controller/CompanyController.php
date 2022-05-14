@@ -113,6 +113,29 @@ class CompanyController extends AbstractController
         return $this->json($data, 200, ['Content-Type' => 'application/json']);
     }
 
+    #[Route('/companies/products/category', methods: ["GET"])]
+    public function findCompanyProductsByCategory(Request $request, ApiResponse $apiResponse): Response
+    {
+        $params = [
+            "company_id" => [
+                "type" => "integer"
+            ],
+            "category_id" => [
+                "type" => "integer"
+            ],
+        ];
+        $apiResponse->setParams($params);
+        $response = $apiResponse->isParamsExistAndCorrectType($request);
+        if ($apiResponse->hasError) {
+            return $this->json($response, 400, ['Content-Type' => 'application/json']);
+        }
+        $companyId = $response["company_id"];
+        $categoryId = $response["category_id"];
+        $products = $this->em->getRepository(Product::class)->findAllActiveProductsByCompanyByCategory($companyId, $categoryId);
+
+        return $this->json($products, 200, ['Content-Type' => 'application/json']);
+    }
+
     #[Route('/companies/products/best', methods: ["GET"], name: 'app_company_products_top_5')]
     public function findCompanyBestProducts(Request $request, ApiResponse $apiResponse): Response
     {

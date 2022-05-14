@@ -70,7 +70,7 @@ class ProductCategoryRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT DISTINCT(pc.name) FROM product_category pc
+            SELECT DISTINCT(pc.name), pc.id FROM product_category pc
             RIGHT JOIN product p ON p.product_category_id = pc.id
             WHERE p.company_id = :companyId
         ';

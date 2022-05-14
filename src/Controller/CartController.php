@@ -37,8 +37,13 @@ class CartController extends AbstractController
         }
         $userId = $response["user_id"];
         $products = $this->em->getRepository(CartItem::class)->findByCartUser($userId);
+        $total = $this->em->getRepository(CartItem::class)->findTotalCart($userId);
 
-        return $this->json($products, 200, ['Content-Type' => 'application/json']);
+        return $this->json([
+            "products" => $products,
+            "total" => $total
+        ], 
+            200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/cart/items', methods: ["POST"])]
@@ -65,15 +70,37 @@ class CartController extends AbstractController
 
         $isInSameCompany = $this->em->getRepository(CartItem::class)->findItemsOfOtherCompanies($response["user_id"], $companyId);
 
+        $user = $this->em->getRepository(User::class)->find($response["user_id"]);
+
         if (!$isInSameCompany) {
-            return $this->json(false);
+            $cart = $this->em->getRepository(CartItem::class)->findBy(["userId" => $user]);
+            foreach ($cart as $oneItem ) {
+                $this->em->remove($oneItem);
+            }
         }
+
+        $product = $this->em->getRepository(Product::class)->find($response["product_id"]);
+
+        $oldCartItem = $this->em->getRepository(CartItem::class)->findOneBy(["userId" => $user, "productId" => $product]);
+
+
+        if ($oldCartItem) {
+            $oldCartItem->setQuantity($oldCartItem->getQuantity() + intval($response["quantity"]));
+
+            $this->em->persist($oldCartItem);
+            $this->em->flush();
+            $total = $this->em->getRepository(CartItem::class)->findTotalCart($user->getId());
+
+            return $this->json([
+                "total" => $total
+            ], 
+                200, ['Content-Type' => 'application/json']);
+        }
+  
 
         $cartItem = new CartItem();
 
-        $user = $this->em->getRepository(User::class)->find($response["user_id"]);
         $cartItem->setuserId($user);
-        $product = $this->em->getRepository(Product::class)->find($response["product_id"]);
         $cartItem->setProductId($product);
         
         $cartItem->setQuantity($response["quantity"]);
@@ -83,7 +110,11 @@ class CartController extends AbstractController
 
         $this->em->persist($cartItem);
         $this->em->flush();
-        return $this->json(true);
+        $total = $this->em->getRepository(CartItem::class)->findTotalCart($user->getId());
+        return $this->json([
+            "total" => $total
+        ], 
+            200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/cart/items/{id}', methods: ["POST"])]

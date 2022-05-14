@@ -62,6 +62,25 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    /**
+     * @return User Returns an array of User objects
+     */
+    
+    public function findInfos($userId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT u.email, u.first_name, u.last_name, u.is_company_owner FROM "user" u
+            WHERE u.id = :userId
+            AND u.deactivated_at IS NULL
+        ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery([
+            'userId' => $userId
+        ]);
+        return $resultSet->fetchAssociative();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
