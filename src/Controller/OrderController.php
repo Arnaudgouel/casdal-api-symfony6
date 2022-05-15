@@ -43,7 +43,7 @@ class OrderController extends AbstractController
         return $this->json($products, 200, ['Content-Type' => 'application/json']);
     }
 
-    #[Route('/orders/items', methods: ["POST"])]
+    #[Route('/orders', methods: ["POST"])]
     public function addNewOrder(Request $request, ApiResponse $apiResponse): Response
     {
         $params = [
@@ -76,7 +76,7 @@ class OrderController extends AbstractController
         $items = $this->em->getRepository(CartItem::class)->findBy(["userId" => $response["user_id"]]);
 
         if (empty($items)) {
-            return $this->json(false);
+            return $this->json(false, 400);
         }
         
         foreach ($items as $item) {
@@ -86,7 +86,7 @@ class OrderController extends AbstractController
             $orderItem->setQuantity($item->getQuantity());
             $orderItem->setCreatedAt(new DateTimeImmutable());
             $orderItem->setUpdatedAt(new DateTimeImmutable());
-            $total += $item->getProductId()->getPrice();
+            $total += $item->getProductId()->getPrice() * $item->getQuantity();
             
             $this->em->persist($orderItem);
             

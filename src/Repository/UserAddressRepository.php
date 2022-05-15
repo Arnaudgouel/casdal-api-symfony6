@@ -73,6 +73,7 @@ class UserAddressRepository extends ServiceEntityRepository
             SELECT ua.* FROM user_address ua
             WHERE ua.user_id = :userId
             AND ua.deactivated_at IS NULL
+            ORDER BY ua.selected_at DESC
         ';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery([

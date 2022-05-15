@@ -29,7 +29,7 @@ class Order
     private $total;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $status;
+    private $status = 'En attente de paiement';
 
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;

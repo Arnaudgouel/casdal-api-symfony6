@@ -69,7 +69,7 @@ class CartItemRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT ci.*, p.* FROM cart_item ci
+            SELECT ci.*, p.name, p.price FROM cart_item ci
             JOIN product p ON p.id = ci.product_id
             WHERE ci.user_id = :userId
         ';

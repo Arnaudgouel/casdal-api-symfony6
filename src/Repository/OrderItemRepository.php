@@ -69,8 +69,9 @@ class OrderItemRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT oi.* FROM order_item oi
+            SELECT oi.*, p.name, p.price FROM order_item oi
             JOIN "order" o ON o.id = oi.order_id
+            JOIN product p ON p.id = oi.product_id
             WHERE o.id = :orderId
         ';
         $stmt = $conn->prepare($sql);
