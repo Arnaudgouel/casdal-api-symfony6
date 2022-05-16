@@ -215,7 +215,7 @@ values
   (
     'aaa@gmail.com',
     '["ROLE_USER"]',
-    'aaa',
+    '$2y$13$LHZukVpEI35lD8EacRot0.G2MV4bXtNOJe38.7Fo2omp6xQ7GI7PO',
     'aa',
     'a'
   ),
