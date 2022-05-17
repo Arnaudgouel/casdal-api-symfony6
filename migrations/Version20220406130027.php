@@ -19,8 +19,7 @@ final class Version20220406130027 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE "order" (id SERIAL PRIMARY KEY, reference VARCHAR(100) UNIQUE NOT NULL, user_id INT, total INT NOT NULL, status VARCHAR(100) DEFAULT (\'Waiting payment\') NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
+        $this->addSql('CREATE TABLE "order" (id SERIAL PRIMARY KEY, reference VARCHAR(100) UNIQUE NOT NULL, user_id INT, total INT NOT NULL, status VARCHAR(100) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('CREATE TABLE "user" (id SERIAL PRIMARY KEY, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, "first_name" VARCHAR(100) NOT NULL, "last_name" VARCHAR(100) NOT NULL, "is_company_owner" BOOLEAN DEFAULT NULL, "created_at" TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), "updated_at" TIMESTAMP(0) WITHOUT TIME ZONE, "deactivated_at" TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('CREATE TABLE order_item (id SERIAL PRIMARY KEY, order_id INT NOT NULL, product_id INT NOT NULL, quantity INT DEFAULT (1) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('CREATE TABLE product (id SERIAL PRIMARY KEY, name VARCHAR(100) NOT NULL, image VARCHAR(255), description VARCHAR(255), product_category_id INT NOT NULL, price INT NOT NULL, available BOOLEAN NOT NULL, company_id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
@@ -41,7 +40,6 @@ final class Version20220406130027 extends AbstractMigration
         $this->addSql('ALTER TABLE cart_item ADD CONSTRAINT cart_item_session_id_fkey FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE cart_item ADD CONSTRAINT cart_item_product_id_fkey FOREIGN KEY (product_id) REFERENCES product (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_address ADD CONSTRAINT user_address_user_id_fkey FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE credit ADD CONSTRAINT credit_user_id_fkey FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE INDEX idx_order_user_id ON "order" (user_id)');
         $this->addSql('CREATE INDEX idx_order_reference ON "order" (reference)');

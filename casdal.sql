@@ -1,21 +1,17 @@
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS cart_item_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS cart_item_id_seq 
 CREATE TABLE "public"."cart_item" (
   "id" int4 NOT NULL DEFAULT nextval('cart_item_id_seq' :: regclass),
-  "shopping_session_id" int4 NOT NULL,
+  "user_id" int4 NOT NULL,
   "product_id" int4 NOT NULL,
   "quantity" int4 NOT NULL,
   "created_at" timestamp(0) DEFAULT now(),
   "updated_at" timestamp(0) DEFAULT NULL :: timestamp without time zone,
   "deactivated_at" timestamp(0),
-  CONSTRAINT "cart_item_session_id_fkey" FOREIGN KEY ("shopping_session_id") REFERENCES "public"."shopping_session"("id") ON DELETE CASCADE,
+  CONSTRAINT "cart_item_session_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE CASCADE,
   CONSTRAINT "cart_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id"),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS company_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS company_id_seq 
 CREATE TABLE "public"."company" (
   "id" int4 NOT NULL DEFAULT nextval('company_id_seq' :: regclass),
   "name" varchar(100) NOT NULL,
@@ -29,9 +25,7 @@ CREATE TABLE "public"."company" (
   CONSTRAINT "company_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "public"."user"("id"),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS company_address_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS company_address_id_seq 
 CREATE TABLE "public"."company_address" (
   "id" int4 NOT NULL DEFAULT nextval('company_address_id_seq' :: regclass),
   "company_id" int4 NOT NULL,
@@ -47,9 +41,7 @@ CREATE TABLE "public"."company_address" (
   CONSTRAINT "company_address_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "public"."company"("id"),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS company_category_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS company_category_id_seq 
 CREATE TABLE "public"."company_category" (
   "id" int4 NOT NULL DEFAULT nextval('company_category_id_seq' :: regclass),
   "title" varchar(100) NOT NULL,
@@ -59,32 +51,13 @@ CREATE TABLE "public"."company_category" (
   "deactivated_at" timestamp(0),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS credit_id_seq -- Table Definition
-CREATE TABLE "public"."credit" (
-  "id" int4 NOT NULL DEFAULT nextval('credit_id_seq' :: regclass),
-  "user_id" int4 NOT NULL,
-  "reference" varchar(100) NOT NULL,
-  "amount_price" int4 NOT NULL,
-  "expiry_date" date,
-  "created_at" timestamp(0) DEFAULT now(),
-  "updated_at" timestamp(0) DEFAULT NULL :: timestamp without time zone,
-  "deactivated_at" timestamp(0),
-  CONSTRAINT "credit_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE CASCADE,
-  PRIMARY KEY ("id")
-);
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Table Definition
 CREATE TABLE "public"."doctrine_migration_versions" (
   "version" varchar(191) NOT NULL,
   "executed_at" timestamp(0) DEFAULT NULL :: timestamp without time zone,
   "execution_time" int4,
   PRIMARY KEY ("version")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS order_id_seq1 -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS order_id_seq1 
 CREATE TABLE "public"."order" (
   "id" int4 NOT NULL DEFAULT nextval('order_id_seq1' :: regclass),
   "reference" varchar(100) NOT NULL,
@@ -99,9 +72,7 @@ CREATE TABLE "public"."order" (
     NULL,
     PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS order_item_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS order_item_id_seq 
 CREATE TABLE "public"."order_item" (
   "id" int4 NOT NULL DEFAULT nextval('order_item_id_seq' :: regclass),
   "order_id" int4 NOT NULL,
@@ -114,9 +85,7 @@ CREATE TABLE "public"."order_item" (
   CONSTRAINT "order_item_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id"),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS product_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS product_id_seq 
 CREATE TABLE "public"."product" (
   "id" int4 NOT NULL DEFAULT nextval('product_id_seq' :: regclass),
   "name" varchar(100) NOT NULL,
@@ -133,9 +102,7 @@ CREATE TABLE "public"."product" (
   CONSTRAINT "product_company_id_fkey" FOREIGN KEY ("company_id") REFERENCES "public"."company"("id"),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS product_category_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS product_category_id_seq 
 CREATE TABLE "public"."product_category" (
   "id" int4 NOT NULL DEFAULT nextval('product_category_id_seq' :: regclass),
   "name" varchar(100) NOT NULL,
@@ -144,22 +111,7 @@ CREATE TABLE "public"."product_category" (
   "deactivated_at" timestamp(0),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS shopping_session_id_seq -- Table Definition
-CREATE TABLE "public"."shopping_session" (
-  "id" int4 NOT NULL DEFAULT nextval('shopping_session_id_seq' :: regclass),
-  "user_id" int4 NOT NULL,
-  "total" int4 NOT NULL,
-  "created_at" timestamp(0) DEFAULT now(),
-  "updated_at" timestamp(0) DEFAULT NULL :: timestamp without time zone,
-  "deactivated_at" timestamp(0),
-  CONSTRAINT "shopping_session_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE CASCADE,
-  PRIMARY KEY ("id")
-);
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS user_id_seq1 -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS user_id_seq1 
 CREATE TABLE "public"."user" (
   "id" int4 NOT NULL DEFAULT nextval('user_id_seq1' :: regclass),
   "email" varchar(180) NOT NULL,
@@ -173,9 +125,7 @@ CREATE TABLE "public"."user" (
   "deactivated_at" timestamp(0),
   PRIMARY KEY ("id")
 );
--- This script only contains the table creation statements and does not fully represent the table in database. It's still missing: indices, triggers. Do not use it as backup.
--- Squences
-CREATE SEQUENCE IF NOT EXISTS user_address_id_seq -- Table Definition
+CREATE SEQUENCE IF NOT EXISTS user_address_id_seq 
 CREATE TABLE "public"."user_address" (
   "id" int4 NOT NULL DEFAULT nextval('user_address_id_seq' :: regclass),
   "user_id" int4 NOT NULL,
