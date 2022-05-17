@@ -30,7 +30,6 @@ final class Version20220406130027 extends AbstractMigration
         $this->addSql('CREATE TABLE company_category (id SERIAL PRIMARY KEY, title VARCHAR(100) NOT NULL, image VARCHAR(255), created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('CREATE TABLE cart_item (id SERIAL PRIMARY KEY, user_id INT NOT NULL, product_id INT NOT NULL, quantity INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('CREATE TABLE user_address (id SERIAL PRIMARY KEY, user_id INT NOT NULL, name VARCHAR(100), address_line1 VARCHAR(255) NOT NULL, address_line2 VARCHAR(255), city VARCHAR(255) NOT NULL, postal_code VARCHAR(100) NOT NULL, country VARCHAR(255) NOT NULL, phone_number VARCHAR(30) NOT NULL, selected_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
-        $this->addSql('CREATE TABLE credit (id SERIAL PRIMARY KEY, user_id INT NOT NULL, reference VARCHAR(100) UNIQUE NOT NULL, amount_price INT NOT NULL, expiry_date date, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT (NOW()), updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deactivated_at TIMESTAMP(0) WITHOUT TIME ZONE )');
         $this->addSql('ALTER TABLE order_item ADD CONSTRAINT order_item_order_id_fkey FOREIGN KEY (order_id) REFERENCES "order" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE order_item ADD CONSTRAINT order_item_product_id_fkey FOREIGN KEY (product_id) REFERENCES product (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE product ADD CONSTRAINT product_category_id_fkey FOREIGN KEY (product_category_id) REFERENCES product_category (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -55,7 +54,6 @@ final class Version20220406130027 extends AbstractMigration
         $this->addSql('CREATE INDEX idx_company_category_title ON company_category (title)');
         $this->addSql('CREATE INDEX idx_cart_item_session_id ON cart_item (user_id)');
         $this->addSql('CREATE INDEX idx_user_address_user_id ON user_address (user_id)');
-        $this->addSql('CREATE INDEX idx_credit_user_id ON credit (user_id)');
     }
 
     public function down(Schema $schema): void
@@ -71,6 +69,5 @@ final class Version20220406130027 extends AbstractMigration
         $this->addSql('DROP TABLE company_category CASCADE');
         $this->addSql('DROP TABLE cart_item CASCADE');
         $this->addSql('DROP TABLE user_address CASCADE');
-        $this->addSql('DROP TABLE credit CASCADE');
     }
 }
