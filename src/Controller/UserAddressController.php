@@ -176,6 +176,21 @@ class UserAddressController extends AbstractController
 
         return $this->json(true);
     }
+
+    #[Route('/users/addresses/{id}', methods: "DELETE")]
+    public function deleteAdresses(int $id, Request $request, ApiResponse $apiResponse): Response
+    {
+        $userAddress = $this->em->getRepository(UserAddress::class)->find($id);
+
+        if (empty($userAddress)) {
+            return $this->json("Doesn't exist", 404);
+        }
+
+        $this->em->remove($userAddress);
+        $this->em->flush();
+
+        return $this->json(true);
+    }
     
     #[Route('/users/addresses/last', methods: "GET", name: 'app_user_last_address')]
     public function getLastAdresses(Request $request, ApiResponse $apiResponse): Response
