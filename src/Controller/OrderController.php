@@ -38,9 +38,9 @@ class OrderController extends AbstractController
             return $this->json($response, 400, ['Content-Type' => 'application/json']);
         }
         $userId = $response["user_id"];
-        $products = $this->em->getRepository(Order::class)->findOrdersByUser($userId);
+        $orders = $this->em->getRepository(Order::class)->findOrdersByUser($userId);
 
-        return $this->json($products, 200, ['Content-Type' => 'application/json']);
+        return $this->json($orders, 200, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/orders', methods: ["POST"])]

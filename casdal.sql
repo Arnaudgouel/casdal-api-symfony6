@@ -67,10 +67,8 @@ CREATE TABLE "public"."order" (
   "created_at" timestamp(0) DEFAULT now(),
   "updated_at" timestamp(0) DEFAULT NULL :: timestamp without time zone,
   "deactivated_at" timestamp(0),
-  CONSTRAINT "order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE
-  SET
-    NULL,
-    PRIMARY KEY ("id")
+  CONSTRAINT "order_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE SET NULL,
+  PRIMARY KEY ("id")
 );
 CREATE SEQUENCE IF NOT EXISTS order_item_id_seq 
 CREATE TABLE "public"."order_item" (
