@@ -75,11 +75,16 @@ class OrderRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
-            SELECT o.*, c.name FROM "order" o
+            SELECT DISTINCT o.*, c2.name FROM "order" o
             LEFT JOIN "user" u ON u.id = o.user_id
             LEFT JOIN order_item oi ON oi.order_id = o.id
             LEFT JOIN product p ON p.id = oi.product_id
-            LEFT JOIN company c ON c.id = p.company_id
+            LEFT JOIN 
+            (
+                SELECT DISTINCT c.name, c.id
+                FROM company c
+            )
+            c2 ON c2.id = p.company_id
             WHERE o.deactivated_at IS NULL
             AND u.id = :userId
             ORDER BY o.created_at DESC
